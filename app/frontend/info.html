@@ -116,12 +116,10 @@
                 fetch(url)
                     .then(resp => resp.json())
                     .then(json => {
-                        setTimeout(() => {
                             this.emps = json.results
                             pageSize = json.pageSize
                             this.totalPage = parseInt((json.total - 1) / pageSize) + 1
-                            this.loading = false
-                        }, 500)
+                            this.loading = false         
                     })
             },
             prevPage() {
