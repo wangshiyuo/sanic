@@ -5,7 +5,7 @@
 
 
     后端：sanic
-    开启一个sanic项目，通过蓝图组织的mvc模式
+    开启一个sanic项目，通过蓝图组织基本的MVC模式
     通过CORS处理跨域
     通过peewee和Sanic来实现RestFul-API的分页
 
