@@ -13,7 +13,7 @@ async def employee_info(request):
     if not word:
         q = EmployeeInfo.filters(page=page, per_page_num=per_page_num)
     elif word.isdigit():
-        q = EmployeeInfo.filters(employee_id=word, per_page_num=per_page_num)
+        q = EmployeeInfo.filters(employee_id=word, page=page, per_page_num=per_page_num)
     else:
         q = EmployeeInfo.filters(name=word, per_page_num=per_page_num)
 
