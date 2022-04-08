@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>VUE</title>
+    <style type="text/css">
+        #page {
+            padding: 20px;
+            text-align: center;
+        }
+
+        #page a {
+            text-decoration: none;
+            color: #67C23A;
+            cursor: pointer;
+            margin: 20px 20px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #909399;
+        }
+
+        #app {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+    </style>
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+</head>
+<body>
+<div>
+    <h2>员工信息表</h2>
+</div>
+<div id="app">
+    <el-table
+            v-loading="loading"
+            border
+            :data="emps"
+            stripe
+            style="width: 100%">
+        <el-table-column
+                prop="id"
+                label="编号"
+                width="150">
+        </el-table-column>
+        <el-table-column
+                prop="name"
+                label="姓名"
+                width="150">
+        </el-table-column>
+        <el-table-column
+                prop="position"
+                label="职位"
+                width="150">
+        </el-table-column>
+        <el-table-column
+                prop="telephonenumber"
+                label="电话"
+                width="150">
+        </el-table-column>
+        <el-table-column
+                prop="salary"
+                label="薪水"
+                width="100">
+        </el-table-column>
+        <el-table-column
+                width="210">
+            <template slot="header" slot-scope="scope">
+                <el-input
+                        v-on:keyup.enter.native="getSearchInfo"
+                        v-model="search"
+                        placeholder="输入员工编号或姓名查询"/>
+            </template>
+<!--            <template slot-scope="scope">-->
+<!--                <el-button-->
+<!--                        @click="handleEdit(scope.$index, scope.row)">编辑-->
+<!--                </el-button>-->
+<!--                <el-button-->
+<!--                        type="danger"-->
+<!--                        @click="handleDelete(scope.$index, scope.row)">删除-->
+<!--                </el-button>-->
+<!--            </template>-->
+        </el-table-column>
+    </el-table>
+    <div id="page">
+        <span id="total">{{this.currentPage}}/{{this.totalPage}}页</span>
+        <a id="prev" @click="prevPage()">上一页</a>
+        <a id="next" @click="nextPage()">下一页</a>
+    </div>
+</div>
+</body>
+<script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.10/vue.js"></script>
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script>
+    Vue.component();
+    let pageSize = 5
+    const app = new Vue({
+        el: '#app',
+        data: {
+            emps: [],
+            currentPage: 1,
+            totalPage: 0,
+            loading: true,
+            search: ''
+        },
+        created() {
+            this.getEmpData()
+        },
+        methods: {
+            getEmpData: function () {
+                this.loading = true
+                const url = 'http://127.0.0.1:5000/api/v1/info?page=' + this.currentPage + '&q=' + this.search
+                fetch(url)
+                    .then(resp => resp.json())
+                    .then(json => {
+                        setTimeout(() => {
+                            this.emps = json.results
+                            pageSize = json.pageSize
+                            this.totalPage = parseInt((json.total - 1) / pageSize) + 1
+                            this.loading = false
+                        }, 500)
+                    })
+            },
+            prevPage() {
+                if (this.currentPage > 1) {
+                    this.currentPage -= 1
+                    this.getEmpData()
+                }
+            },
+            nextPage() {
+                if (this.currentPage < this.totalPage) {
+                    this.currentPage += 1
+                    this.getEmpData()
+                }
+            },
+            getSearchInfo() {
+                this.currentPage = 1
+                this.getEmpData()
+            }
+        }
+    })
+</script>
+
+</html>
