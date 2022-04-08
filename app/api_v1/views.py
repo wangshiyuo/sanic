@@ -15,7 +15,7 @@ async def employee_info(request):
     elif word.isdigit():
         q = EmployeeInfo.filters(employee_id=word, page=page, per_page_num=per_page_num)
     else:
-        q = EmployeeInfo.filters(name=word, per_page_num=per_page_num)
+        q = EmployeeInfo.filters(name=word, page=page, per_page_num=per_page_num)
 
     results = [model_to_dict(row) for row in q.iterator()]
     total = EmployeeInfo.total()
